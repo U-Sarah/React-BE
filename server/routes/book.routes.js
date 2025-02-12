@@ -1,6 +1,7 @@
 import { Router } from "express";
 import bookSchema from "../models/book.schema.js";
 import auth from "../middleware/auth.js";
+import { MongoTopologyClosedError } from "mongodb";
 
 
 const route = Router()
@@ -8,23 +9,26 @@ const route = Router()
 route.use(auth)
 
 route.get("/", async (req, res) => {
-    const book = await bookSchema.find({})
-    .then(books => {
+    try{
+        const books = await bookSchema.find({})
         res.json(books)
-    })
-    .catch(err => {
+    }
+    catch(err) {
         res.json(err)
-    })
+    }
 })
 route.get("/:id", async (req, res) => {
-    const id = req.params.id
+    try{
+        const id = req.params.id
     const book = await bookSchema.findById(id)
-    .then(books => {
-        res.json(books)
-    })
-    .catch(err => {
+    if(!book){
+        return res.json({message: "Book not found"})
+    }
+     res.json(book)
+    }
+    catch (err) {
         res.json(err)
-    })
+    }
 })
 
 route.post("/post", async (req, res) => {

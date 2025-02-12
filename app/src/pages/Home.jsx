@@ -32,6 +32,7 @@ const Home = () => {
       setUserName(auth.user.username);
     }
   }
+  const token = JSON.parse(localStorage.getItem("user")).jwt;
 
   const LogOut = () => {
     localStorage.removeItem("user")
