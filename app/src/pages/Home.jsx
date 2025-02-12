@@ -10,8 +10,7 @@ import AddBook from "./AddBook";
 import ViewModal from "../components/ViewModal";
 import DeleteModal from "../components/DeleteModal";
 import EditModal from "../components/EditModal";
-import { FaUser, FaDoorOpen} from "react-icons/fa";
-
+import { FaUser, FaDoorOpen } from "react-icons/fa";
 
 const Home = () => {
   const [books, setBooks] = useState([]);
@@ -19,7 +18,6 @@ const Home = () => {
   const [selectedBook, setSelectedBook] = useState({});
   const [deleteModal, setDeleteModal] = useState(false);
   const [editBook, setEditBook] = useState(false);
-  const [username, setUserName] = useState("");
   const [profileSettings, setProfileSettings] = useState(false);
   const navigate = useNavigate();
 
@@ -27,28 +25,32 @@ const Home = () => {
     const auth = JSON.parse(localStorage.getItem("user"));
     if (!auth) {
       navigate("/login");
+      return;
     } else {
       navigate("/");
-      setUserName(auth.user.username);
     }
   }
-  const token = JSON.parse(localStorage.getItem("user")).jwt;
+  checkAuth();
+
+const user = JSON.parse(localStorage.getItem("user"));
+const token = user ? user.token : null;
+
 
   const LogOut = () => {
-    localStorage.removeItem("user")
-    navigate("/login")
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+  useEffect(() => {
 
-  }
-  useEffect(() => {
-    checkAuth();
-  }, []);
-  useEffect(() => {
     const fetchBooks = async () => {
-      const response = await axios.get("http://localhost:3000/books", {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        "http://localhost:3000/books",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       setBooks(response.data);
     };
     fetchBooks();
@@ -73,8 +75,11 @@ const Home = () => {
           <FaPlus />
         </button>
         <span className="p-2 relative rounded-full flex gap-2">
-          <FaUser onClick={() => setProfileSettings(!profileSettings)} title="user"/>
-            <FaDoorOpen title="Log out" onClick={() => LogOut()}/>
+          <FaUser
+            onClick={() => setProfileSettings(!profileSettings)}
+            title="user"
+          />
+          <FaDoorOpen title="Log out" onClick={() => LogOut()} />
         </span>
       </div>
 

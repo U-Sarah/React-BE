@@ -11,18 +11,19 @@ route.use(auth)
 route.get("/", async (req, res) => {
     try{
         const books = await bookSchema.find({})
-        res.json(books)
+       return res.json(books)
     }
     catch(err) {
         res.json(err)
     }
 })
+
 route.get("/:id", async (req, res) => {
     try{
         const id = req.params.id
     const book = await bookSchema.findById(id)
     if(!book){
-        return res.json({message: "Book not found"})
+         res.status(404).json({message: "Book not found"})
     }
      res.json(book)
     }
@@ -32,30 +33,39 @@ route.get("/:id", async (req, res) => {
 })
 
 route.post("/post", async (req, res) => {
+    try {
     const book = await bookSchema.create(req.body)
-    .then(book => res.send(book))
-    .catch(err => res.send(err))
+    res.json({message: "Book created",book})
+        
+    } catch (error) {
+    (err) => res.json(err)
+        
+    }
 })
 
 route.delete("/:id", async (req, res) => {
-    const id = req.params.id
-    const book = await bookSchema.findByIdAndDelete(id)
-    .then(book => res.send("Book Deleted"))
-    .catch(err => res.send(err))
+    try{
+      const id = req.params.id
+        await bookSchema.findByIdAndDelete(id)
+        res.json({message: "Book Deleted"})
+    }
+    catch (err) {
+        res.json(err)
+    }
 })
 
 route.put("/:id", async(req, res) => {
+  try {
     const id = req.params.id
-    const book = await bookSchema.findByIdAndUpdate(id, req.body)
-    .then(book => res.send("Book updated"))
-    .catch(err => res.send(err))
-})
-
-route.get("/:id", async (req, res) => {
-    const id = req.params.id
-    const book = await bookSchema.findById(id)
-    .then(book => res.send(book))
-    .catch(err => res.send(err))
+    const book = await bookSchema.findByIdAndUpdate(id, req.body, {new: true})
+    if(!book){
+         res.status(404).json({message: "Book not found"})
+    }
+      res.json({message:"Book updated"})
+  } catch (error) {
+      
+       res.status(500).json({message: "Internal server error",error :error.message})
+  }
 })
 
 export default route

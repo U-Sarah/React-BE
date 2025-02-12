@@ -16,7 +16,7 @@ const SignUp = () => {
   const handleSignUp = async (username, email, password) => {
     setError(false)
    try {
-    const response = await  axios.post("http://localhost:3000/user/signup", {
+    const response = await  axios.post("https://react-be-9ugr.onrender.com/user/signup", {
       username: username,
       email,
       password,
