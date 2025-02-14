@@ -1,8 +1,6 @@
 import { Router } from "express";
 import bookSchema from "../models/book.schema.js";
 import auth from "../middleware/auth.js";
-import { MongoTopologyClosedError } from "mongodb";
-
 
 const route = Router()
 

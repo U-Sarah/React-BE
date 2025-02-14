@@ -12,7 +12,6 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-localStorage.clear("user")
 
   const handleLogin = async (email, password) => {
     setError(false);

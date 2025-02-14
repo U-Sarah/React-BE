@@ -21,19 +21,8 @@ const Home = () => {
   const [profileSettings, setProfileSettings] = useState(false);
   const navigate = useNavigate();
 
-  function checkAuth() {
-    const auth = JSON.parse(localStorage.getItem("user"));
-    if (!auth) {
-      navigate("/login");
-      return;
-    } else {
-      navigate("/");
-    }
-  }
-  checkAuth();
-
 const user = JSON.parse(localStorage.getItem("user"));
-const token = user ? user.token : null;
+const token = user ? user.jwt : null;
 
 
   const LogOut = () => {
@@ -41,7 +30,10 @@ const token = user ? user.token : null;
     navigate("/login");
   };
   useEffect(() => {
-
+    if(!token){
+      navigate('/login')
+      return
+    }
     const fetchBooks = async () => {
       const response = await axios.get(
         "http://localhost:3000/books",

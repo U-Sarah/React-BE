@@ -3,7 +3,7 @@ import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import AddBook from "./pages/AddBook";
-import Login from "./pages/login";
+import Login from "./pages/Login"
 import SignUp from "./pages/signUp";
 import Authwrapper from "./components/Authwrapper";
 const App = () => {
