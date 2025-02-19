@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
-import { IoIosReturnLeft } from "react-icons/io";
+import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
+import { LibraryContext } from "../contexts/libraryContext";
+import Loading from "../components/Loading";
 const AddBook = () => {
+  const {loading, setLoading} = useContext(LibraryContext);
   const [author, setAuthor] = useState(" ");
   const [title, setTitle] = useState(" ");
   const [date, setDate] = useState(" ");
   const [description, setDescription] = useState(" ");
-  const [link, setLink] = useState("")
+  const [link, setLink] = useState("");
   const navigate = useNavigate();
   const handleSubmit = async () => {
+    setLoading(true);
     axios
       .post("http://localhost:3000/books/post", {
         title: title,
@@ -26,13 +29,15 @@ const AddBook = () => {
         console.log(err);
       });
   };
+
   return (
     <div className="flex flex-col justify-center items-center p-8">
+      {loading && <Loading />}
       <button
-        className="self-start p-2 text-3xl bg-sky-500 text-white rounded-lg"
+        className="self-start px-4 py-1.5 text-2xl bg-sky-500 text-white rounded-lg"
         onClick={() => navigate("/")}
       >
-        <IoIosReturnLeft />
+        <FaArrowLeft />
       </button>
       <form
         onSubmit={(e) => {
@@ -68,7 +73,14 @@ const AddBook = () => {
           onInput={(e) => setDate(e.target.value)}
           required
         />
-        <input type="text" required placeholder="link to image" onInput={(e)=> {setLink(e.target.value)}}/>
+        <input
+          type="text"
+          required
+          placeholder="link to image"
+          onInput={(e) => {
+            setLink(e.target.value);
+          }}
+        />
         <textarea
           name=""
           id=""

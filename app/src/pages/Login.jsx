@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoIosReturnLeft } from "react-icons/io";
+import { LibraryContext } from "../contexts/libraryContext";
+import Loading from "../components/Loading";
+
 
 const Login = () => {
+  const {loading, setLoading} = useContext(LibraryContext)
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -61,6 +65,7 @@ const Login = () => {
         <button className="bg-sky-500 p-2 px-1.5 w-6/12 rounded-lg text-white focus:outline-none hover:bg-sky-600">
           <span>Log In</span>
         </button>
+        {loading && <Loading />}
         <p
           className="hover:text-sky-500 cursor-pointer"
           onClick={() => navigate("/signup")}

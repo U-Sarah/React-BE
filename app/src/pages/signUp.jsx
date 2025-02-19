@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { LibraryContext } from "../contexts/libraryContext";
+import Loading from "../components/Loading";
 
-import { IoIosReturnLeft } from "react-icons/io";
 
 
 const SignUp = () => {
+  const {Loading, setLoading} = useContext(LibraryContext)
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +16,7 @@ const SignUp = () => {
    const navigate = useNavigate();
 
   const handleSignUp = async (username, email, password) => {
+    setLoading(true)
     setError(false)
    try {
     const response = await  axios.post("https://react-be-9ugr.onrender.com/user/signup", {
@@ -22,6 +25,7 @@ const SignUp = () => {
       password,
     });
     localStorage.setItem("user", JSON.stringify(response.data))
+    setLoading(false)
     navigate("/")
    } catch (error) {
     setError(true)
@@ -42,6 +46,8 @@ const SignUp = () => {
           handleSignUp(username, email, password);
         }}
       >
+        {Loading && <Loading />}
+
         <h1 className="text-2xl font-bold">Create Account</h1>
         <input
           type="text"

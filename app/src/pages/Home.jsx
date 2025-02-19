@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaEye } from "react-icons/fa";
@@ -11,6 +11,9 @@ import ViewModal from "../components/ViewModal";
 import DeleteModal from "../components/DeleteModal";
 import EditModal from "../components/EditModal";
 import { FaUser, FaDoorOpen } from "react-icons/fa";
+import { LibraryContext } from "../contexts/libraryContext";
+import Loading from "../components/Loading";
+
 
 const Home = () => {
   const [books, setBooks] = useState([]);
@@ -21,6 +24,8 @@ const Home = () => {
   const [profileSettings, setProfileSettings] = useState(false);
   const navigate = useNavigate();
 
+  const {loading, setLoading, setDisplay} = useContext(LibraryContext)
+
 const user = JSON.parse(localStorage.getItem("user"));
 const token = user ? user.jwt : null;
 
@@ -30,20 +35,28 @@ const token = user ? user.jwt : null;
     navigate("/login");
   };
   useEffect(() => {
-    if(!token){
-      navigate('/login')
-      return
-    }
     const fetchBooks = async () => {
-      const response = await axios.get(
-        "http://localhost:3000/books",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setBooks(response.data);
+      try {
+        setLoading(true)
+        const response = await axios.get(
+          "http://localhost:3000/books",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setLoading(false)
+        setBooks(response.data);
+      } catch (error) {
+        setLoading(false)
+       if(error.response ?. status === 401) {
+        navigate("/login")
+       } else {
+        console.log(error)
+       }
+      }
+      
     };
     fetchBooks();
   }, [deleteModal, editBook]);
@@ -59,6 +72,7 @@ const token = user ? user.jwt : null;
       {editBook && (
         <EditModal selectedBook={selectedBook} setEditBook={setEditBook} />
       )}
+      {loading && <Loading />}
       <div className="flex justify-between items-center">
         <button
           onClick={() => navigate("./AddBook")}
@@ -66,15 +80,8 @@ const token = user ? user.jwt : null;
         >
           <FaPlus />
         </button>
-        <span className="p-2 relative rounded-full flex gap-2">
-          <FaUser
-            onClick={() => setProfileSettings(!profileSettings)}
-            title="user"
-          />
-          <FaDoorOpen title="Log out" onClick={() => LogOut()} />
-        </span>
+        <button className="py-1 rounded-lg bg-red-600 text-white " onClick={() => LogOut()}>Log Out</button>
       </div>
-
       <table className="w-full table-auto border-collapse border-2 border-sky-500 ">
         <thead>
           <tr>
@@ -123,6 +130,6 @@ const token = user ? user.jwt : null;
       </table>
     </div>
   );
-};
+}
 
 export default Home;
