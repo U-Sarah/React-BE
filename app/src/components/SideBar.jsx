@@ -1,8 +1,5 @@
-import React from "react";
+
 import { useNavigate } from "react-router-dom";
-import { FaCompass } from "react-icons/fa6";
-import { MdSpaceDashboard } from "react-icons/md";
-import { FaBookReader } from "react-icons/fa";
 
 const SideBar = () => {
   const navigate = useNavigate()
