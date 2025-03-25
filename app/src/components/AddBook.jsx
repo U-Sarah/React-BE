@@ -3,8 +3,8 @@ import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { LibraryContext } from "../contexts/libraryContext";
-import Loading from "../components/Loading";
-const AddBook = () => {
+import Loading from "./Loading";
+const AddBook = ({setAddBook}) => {
   const {loading, setLoading} = useContext(LibraryContext);
   const [author, setAuthor] = useState(" ");
   const [title, setTitle] = useState(" ");
@@ -15,7 +15,7 @@ const AddBook = () => {
   const handleSubmit = async () => {
     setLoading(true);
     axios
-      .post("http://localhost:3000/books/post", {
+      .post("https://react-be-9ugr.onrender.com/books/post", {
         title: title,
         author: author,
         publishDate: date,
@@ -31,27 +31,24 @@ const AddBook = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center p-8">
+    <div className="w-full h-full z-10 backdrop-blur-sm absolute top-0 left-0 flex justify-center items-start pt-20">
       {loading && <Loading />}
-      <button
-        className="self-start px-4 py-1.5 text-2xl bg-sky-500 text-white rounded-lg"
-        onClick={() => navigate("/")}
-      >
-        <FaArrowLeft />
-      </button>
+
+      
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit(e);
         }}
-        className="flex flex-col gap-2 border w-96 p-4 bg-sky-100"
+        className="flex flex-col gap-2 border w-96 p-4 bg-white rounded-lg"
       >
+        <h1 className="text-2xl font-bold">Add Book</h1>
         <input
           type="text"
           name=""
           id=""
           placeholder="Title"
-          className="p-2 "
+          className="p-2 border rounded-lg"
           onInput={(e) => setTitle(e.target.value)}
           required
         />
@@ -60,7 +57,7 @@ const AddBook = () => {
           name=""
           id=""
           placeholder="Author"
-          className="p-2"
+          className="p-2 border rounded-lg"
           onInput={(e) => setAuthor(e.target.value)}
           required
         />
@@ -69,7 +66,7 @@ const AddBook = () => {
           name=""
           id=""
           placeholder="Publish Date"
-          className="p-2"
+          className="p-2 border rounded-lg"
           onInput={(e) => setDate(e.target.value)}
           required
         />
@@ -77,6 +74,7 @@ const AddBook = () => {
           type="text"
           required
           placeholder="link to image"
+          className="p-2 border rounded-lg"
           onInput={(e) => {
             setLink(e.target.value);
           }}
@@ -85,11 +83,14 @@ const AddBook = () => {
           name=""
           id=""
           placeholder="Description"
-          className="p-2"
+          className="p-2 border rounded-lg"
           onInput={(e) => setDescription(e.target.value)}
           required
         ></textarea>
-        <button>Save</button>
+        <div className="flex gap-6">
+        <button className="bg-gray-500 text-white p-2 rounded-lg w-44" onClick={() => setAddBook(false)}>Cancel</button>
+        <button className="bg-black text-white p-2 rounded-lg w-44">Add</button>
+        </div>
       </form>
     </div>
   );

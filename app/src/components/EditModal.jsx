@@ -4,6 +4,7 @@ import { MdCancel } from "react-icons/md";
 
 
 
+
 const EditModal = ({ setEditBook, selectedBook }) => {
   const [author, setAuthor] = useState(selectedBook.author);
   const [title, setTitle] = useState(selectedBook.title);
@@ -15,7 +16,7 @@ const EditModal = ({ setEditBook, selectedBook }) => {
   const handleUpdate = async () => {
     const token = JSON.parse(localStorage.getItem("user")).token;
     const id = selectedBook._id;
-    axios.put(`http://localhost:3000/books/${id}`, {
+    axios.put(`https://react-be-9ugr.onrender.com/books/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
