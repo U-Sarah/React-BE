@@ -9,7 +9,10 @@ configDotenv()
 
 const server = express()
 
-server.use(cors())
+server.use(cors({
+    origin: "http://localhost:5173", // Allow requests from Vite frontend
+  credentials: true, // Allow credentials (cookies) to be sent
+}))
 server.use(express.json())
 server.use("/books", route)
 server.use("/user", userRouter)
