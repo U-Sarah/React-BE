@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IoSettingsSharp } from "react-icons/io5";
 
 const Header = () => {
